@@ -19,7 +19,7 @@ services:
   # ******************
   # Accounting service
   accounting:
-    image: ${IMAGE_NAME}:${DEMO_VERSION}-accounting
+    image: ${DOCKER_USER}/accounting:latest
     container_name: accounting
     build:
       context: ./
@@ -46,7 +46,7 @@ services:
 
   # AdService
   ad:
-    image: ${IMAGE_NAME}:${DEMO_VERSION}-ad
+    image: ${DOCKER_USER}/ad:latest
     container_name: ad
     build:
       context: ./
@@ -82,7 +82,7 @@ services:
 
   # Cart service
   cart:
-    image: ${IMAGE_NAME}:${DEMO_VERSION}-cart
+    image: ${DOCKER_USER}/cart:latest
     container_name: cart
     build:
       context: ./
@@ -116,7 +116,7 @@ services:
 
   # Checkout service
   checkout:
-    image: ${IMAGE_NAME}:${DEMO_VERSION}-checkout
+    image: ${DOCKER_USER}/checkout:latest
     container_name: checkout
     build:
       context: ./
@@ -169,7 +169,7 @@ services:
 
   # Currency service
   currency:
-    image: ${IMAGE_NAME}:${DEMO_VERSION}-currency
+    image: ${DOCKER_USER}/currency:latest
     container_name: currency
     build:
       context: ./
@@ -197,7 +197,7 @@ services:
 
   # Email service
   email:
-    image: ${IMAGE_NAME}:${DEMO_VERSION}-email
+    image: ${DOCKER_USER}/email:latest
     container_name: email
     build:
       context: ./
@@ -224,7 +224,7 @@ services:
 
   # Fraud Detection service
   fraud-detection:
-    image: ${IMAGE_NAME}:${DEMO_VERSION}-fraud-detection
+    image: ${DOCKER_USER}/fraud-detection:latest
     container_name: fraud-detection
     build:
       context: ./
@@ -257,7 +257,7 @@ services:
 
   # Frontend
   frontend:
-    image: ${IMAGE_NAME}:${DEMO_VERSION}-frontend
+    image: ${DOCKER_USER}/frontend:latest
     container_name: frontend
     build:
       context: ./
@@ -318,7 +318,7 @@ services:
 
   # Frontend Proxy (Envoy)
   frontend-proxy:
-    image: ${IMAGE_NAME}:${DEMO_VERSION}-frontend-proxy
+    image: ${DOCKER_USER}/frontend-proxy:latest
     container_name: frontend-proxy
     build:
       context: ./
@@ -367,7 +367,7 @@ services:
 
   # image-provider
   image-provider:
-    image: ${IMAGE_NAME}:${DEMO_VERSION}-image-provider
+    image: ${DOCKER_USER}/image-provider:latest
     container_name: image-provider
     build:
       context: ./
@@ -394,7 +394,7 @@ services:
 
   # Load Generator
   load-generator:
-    image: ${IMAGE_NAME}:${DEMO_VERSION}-load-generator
+    image: ${DOCKER_USER}/load-generator:latest
     container_name: load-generator
     build:
       context: ./
@@ -432,7 +432,7 @@ services:
 
   # Payment service
   payment:
-    image: ${IMAGE_NAME}:${DEMO_VERSION}-payment
+    image: ${DOCKER_USER}/payment:latest
     container_name: payment
     build:
       context: ./
@@ -463,7 +463,7 @@ services:
 
   # Product Catalog service
   product-catalog:
-    image: ${IMAGE_NAME}:${DEMO_VERSION}-product-catalog
+    image: ${DOCKER_USER}/product-catalog:latest
     container_name: product-catalog
     build:
       context: ./
@@ -498,7 +498,7 @@ services:
 
   # Quote service
   quote:
-    image: ${IMAGE_NAME}:${DEMO_VERSION}-quote
+    image: ${DOCKER_USER}/quote:latest
     container_name: quote
     build:
       context: ./
@@ -526,7 +526,7 @@ services:
 
   # Recommendation service
   recommendation:
-    image: ${IMAGE_NAME}:${DEMO_VERSION}-recommendation
+    image: ${DOCKER_USER}/recommendation:latest
     container_name: recommendation
     build:
       context: ./
@@ -562,7 +562,7 @@ services:
 
   # Shipping service
   shipping:
-    image: ${IMAGE_NAME}:${DEMO_VERSION}-shipping
+    image: ${DOCKER_USER}/shipping:latest
     container_name: shipping
     build:
       context: ./
@@ -620,7 +620,7 @@ services:
 
   # Flagd UI for configuring the feature flag service
   flagd-ui:
-    image: ${IMAGE_NAME}:${DEMO_VERSION}-flagd-ui
+    image: ${DOCKER_USER}/flagd-ui:latest
     container_name: flagd-ui
     build:
       context: ./
@@ -647,7 +647,7 @@ services:
 
   # Kafka used by Checkout, Accounting, and Fraud Detection services
   kafka:
-    image: ${IMAGE_NAME}:${DEMO_VERSION}-kafka
+    image: ${DOCKER_USER}/kafka:latest
     container_name: kafka
     build:
       context: ./
