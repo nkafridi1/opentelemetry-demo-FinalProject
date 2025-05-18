@@ -1,0 +1,77 @@
+name: CD - Deploy to EKS with Kubectl
+
+on:
+  workflow_run:
+    workflows: ["CI - Build and Push Docker Image"]
+    types:
+      - completed
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      AWS_REGION: us-east-1
+      EKS_CLUSTER: otel-demo-cluster
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESSKEY }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRETKEY }}
+        aws-region: ${{ env.AWS_REGION }}
+
+    - name: Update kubeconfig
+      run: aws eks update-kubeconfig --name $EKS_CLUSTER --region $AWS_REGION
+
+    - name: 🔍 Check cluster connection
+      run: kubectl get nodes
+
+    - name: 🏗 Create otel-demo namespace
+      run: kubectl create namespace otel-demo --dry-run=client -o yaml | kubectl apply -f -
+
+    - name: 📦 Clone and apply OpenTelemetry manifests
+      run: |
+        git clone https://github.com/nkafridi1/opentelemetry-demo-FinalProject.git
+        cd opentelemetry-demo-FinalProject
+        kubectl apply -n otel-demo -f ./kubernetes/opentelemetry-demo.yaml
+
+    - name: Monitor deployment rollouts and rollback on failure
+      run: |
+        echo "🔍 Checking deployment rollouts in namespace 'otel-demo'..."
+        deployments=$(kubectl get deployments -n otel-demo -o jsonpath="{.items[*].metadata.name}")
+        failed=0
+
+        for deploy in $deployments; do
+          echo "⏳ Waiting for rollout of '$deploy'..."
+          if ! kubectl rollout status deployment/$deploy -n otel-demo --timeout=120s; then
+            echo "❌ Rollout failed for '$deploy'"
+            failed=1
+            break
+          fi
+          echo "✅ '$deploy' rolled out successfully"
+        done
+
+        if [ "$failed" -eq 1 ]; then
+          echo "🚨 Detected failed rollout. Starting rollback (if applicable)..."
+          for deploy in $deployments; do
+            echo "🔎 Checking revision history for '$deploy'..."
+            if kubectl rollout history deployment/$deploy -n otel-demo | grep -q "REVISION"; then
+              echo "🔁 Rolling back '$deploy'..."
+              if kubectl rollout undo deployment/$deploy -n otel-demo; then
+                echo "✅ Rolled back '$deploy' successfully"
+              else
+                echo "⚠ Failed to rollback '$deploy'"
+              fi
+            else
+              echo "⚠ No previous revision for '$deploy' — skipping rollback"
+            fi
+          done
+          echo "⚠ Rollback process completed. Review logs for any manual intervention."
+          exit 1
+        else
+          echo "✅ All deployments rolled out successfully"
+        fi
