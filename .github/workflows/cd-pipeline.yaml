@@ -47,7 +47,7 @@ jobs:
 
         for deploy in $deployments; do
           echo "⏳ Waiting for rollout of '$deploy'..."
-          if ! kubectl rollout status deployment/$deploy -n otel-demo --timeout=120s; then
+          if ! kubectl rollout status deployment/$deploy -n otel-demo --timeout=300s; then
             echo "❌ Rollout failed for '$deploy'"
             failed=1
             break

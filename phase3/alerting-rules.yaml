@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: alert-rules
+  namespace: monitoring
+data:
+  alerting_rules.yml: |
+    groups:
+    - name: pod-restart-rules
+      rules:
+      - alert: HighPodRestartCount
+        expr: kube_pod_container_status_restarts_total > 5
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: Pod restart count high
+          description: "Pod '{{ $labels.pod }}' in namespace '{{ $labels.namespace }}' has restarted more than 5 times in the last 5 minutes."
